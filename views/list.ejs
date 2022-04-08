@@ -12,7 +12,6 @@
       integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
       crossorigin="anonymous"
     />
-    <!-- <link rel="stylesheet" href="style.css" /> -->
 
     <title>Hello, world!</title>
   </head>
@@ -47,20 +46,15 @@
       </div>
     </nav>
 
-    <div class="container mt-4">
-      <form action="/list" method="POST">
-        <div class="form-group">
-          <label>할일</label>
-          <input type="text" class="form-control" name="title" />
-        </div>
-        <div class="form-group">
-          <label>Due date</label>
-          <input type="text" class="form-control" name="date" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
+    <ul class="list-group">
+      <% for(let i = 0; i < posts.length; i++){ %>
+      <li class="list-group-item">
+        <h4>할일 : <%= posts[i].title %></h4>
+        <p>마감날짜 : <%= posts[i].date %></p>
+        <button class="delete" data-id="<%= posts[i]._id %>">삭제</button>
+      </li>
+      <% } %>
+    </ul>
 
     <script
       src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
@@ -77,5 +71,29 @@
       integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      $(".delete").on("click", (e) => {
+        let id = e.target.dataset.id;
+        let click = $(this);
+        $.ajax({
+          method: "DELETE",
+          url: "/list",
+          data: { _id: id },
+        })
+          .done((res) => {
+            click.parent("li").fadeOut();
+            console.log("삭제 성공");
+          })
+          .fail((err) => {
+            console.log(err);
+          });
+      });
+    </script>
   </body>
 </html>
